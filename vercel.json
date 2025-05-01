@@ -1,0 +1,8 @@
+{
+  "regions": ["icn1"],
+  "build": {
+    "env": {
+      "TZ": "Asia/Seoul"
+    }
+  }
+}
