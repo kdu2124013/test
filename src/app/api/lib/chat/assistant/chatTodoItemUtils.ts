@@ -144,18 +144,17 @@ export const parseKoreanTime = (
         .date(day)
         .startOf('day');
       
-      // 현재 날짜와 입력된 날짜가 같은 경우, 현재 시간 이후의 시간만 설정 가능하도록
+      // 오늘 날짜인 경우에만 현재 시간 이후의 시간만 설정 가능하도록
       if (date.isSame(currentTime, 'day')) {
         const currentHour = currentTime.hour();
         if (hours <= currentHour) {
           return { error: `오늘은 ${currentHour + 1}시 이후의 시간만 설정할 수 있습니다.` };
         }
       }
+      // 다른 날짜(내일 포함)는 시간 제약 없음
     } else {
-      // 날짜가 명시되지 않은 경우에만 현재 시간 사용
+      // 날짜가 명시되지 않은 경우(오늘)는 현재 시간 이후만 설정 가능
       date = currentTime.clone();
-      
-      // 현재 시간 이후의 시간만 설정 가능하도록
       const currentHour = currentTime.hour();
       if (hours <= currentHour) {
         return { error: `${currentHour + 1}시 이후의 시간만 설정할 수 있습니다.` };
