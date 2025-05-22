@@ -102,22 +102,16 @@ export const parseKoreanTime = (
 
   if (match) {
     console.log("Regex match:", match);
-    const [fullMatch, monthStr, dayStr, periodBefore, hourStr, timeUnit, periodAfter, input] = match;
+    const [fullMatch, monthStr, dayStr, periodBefore, hourStr, timeUnit, periodAfter] = match;
     console.log(
-      `Extracted values: monthString=${monthStr}, dayString=${dayStr}, periodBefore=${periodBefore}, hourStr=${hourStr}, timeUnit=${timeUnit}, periodAfter=${periodAfter}, input=${input}`
+      `Extracted values: monthString=${monthStr}, dayString=${dayStr}, periodBefore=${periodBefore}, hourStr=${hourStr}, timeUnit=${timeUnit}, periodAfter=${periodAfter}`
     );
 
-    console.log("monthStr", typeof monthStr);
-    console.log("dayStr", typeof dayStr);
     let month = monthStr ? parseInt(monthStr) : currentTime.month() + 1;
     let day = dayStr ? parseInt(dayStr) : currentTime.date();
     let hours = hourStr ? parseInt(hourStr) : 0;
     const minutes = timeUnit === "분" ? hours : 0;
     const period = periodBefore || periodAfter;
-
-    console.log(`Parsed time: hours=${month}, hours=${day}, hours=${hours}, minutes=${minutes}, period=${period}`);
-
-    let date;
 
     // 날짜 유효성 검사
     if (month < 1 || month > 12 || day < 1 || day > 31) {
@@ -141,41 +135,24 @@ export const parseKoreanTime = (
       return { error: "유효하지 않은 분입니다. 0에서 59 사이의 값을 입력해주세요." };
     }
 
+    let date;
     if (month || day) {
-      // 월이나 일 중 하나라도 있는 경우
-      date = dayjs().year(currentTime.year()); // 현재 년도 사용
-      console.log(`Initial date set to current year: ${date.format("YYYY-MM-DD HH:mm:ssZ")}`);
-
-      // 전체 날짜/시간 유효성 검사
-      if (!date.isValid()) {
-        return { error: "유효하지 않은 날짜/시간입니다." };
-      }
-
-      if (month) {
-        date = date.month(month - 1);
-        console.log(`After setting month: ${date.format("YYYY-MM-DD HH:mm:ssZ")}`);
-      }
-
-      if (day) {
-        date = date.date(day);
-        console.log(`After setting day: ${date.format("YYYY-MM-DD HH:mm:ssZ")}`);
-      } else if (month) {
-        date = date.date(1); // 월만 있고 일자 정보가 없으면 1일로 설정
-        console.log(`Set to first day of month: ${date.format("YYYY-MM-DD HH:mm:ssZ")}`);
-      }
+      // 월이나 일이 명시된 경우, 해당 날짜의 시작 시간을 기준으로 설정
+      date = dayjs()
+        .year(currentTime.year())
+        .month(month - 1)
+        .date(day)
+        .startOf('day');
     } else {
-      // 날짜 정보가 전혀 없는 경우
+      // 날짜가 명시되지 않은 경우에만 현재 시간 사용
       date = currentTime.clone();
-      console.log(`No date info, using current time: ${date.format("YYYY-MM-DD HH:mm:ssZ")}`);
     }
 
     if (timeUnit && timeUnit !== "분") {
       hours = adjustHours(hours, period, date);
       date = date.hour(hours).minute(minutes);
-      console.log(`After setting time: ${date.format("YYYY-MM-DD HH:mm:ssZ")}`);
     } else if (!timeUnit) {
-      date = date.startOf("day"); // 시간 정보가 없으면 00:00으로 설정
-      console.log(`No time info, set to start of day: ${date.format("YYYY-MM-DD HH:mm:ssZ")}`);
+      date = date.startOf("day");
     }
 
     console.log(`Final parsed date: ${date.format("YYYY-MM-DD HH:mm:ssZ")}`);
