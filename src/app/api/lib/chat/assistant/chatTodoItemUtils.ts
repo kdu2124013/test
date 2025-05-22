@@ -143,9 +143,23 @@ export const parseKoreanTime = (
         .month(month - 1)
         .date(day)
         .startOf('day');
+      
+      // 현재 날짜와 입력된 날짜가 같은 경우, 현재 시간 이후의 시간만 설정 가능하도록
+      if (date.isSame(currentTime, 'day')) {
+        const currentHour = currentTime.hour();
+        if (hours <= currentHour) {
+          return { error: `오늘은 ${currentHour + 1}시 이후의 시간만 설정할 수 있습니다.` };
+        }
+      }
     } else {
       // 날짜가 명시되지 않은 경우에만 현재 시간 사용
       date = currentTime.clone();
+      
+      // 현재 시간 이후의 시간만 설정 가능하도록
+      const currentHour = currentTime.hour();
+      if (hours <= currentHour) {
+        return { error: `${currentHour + 1}시 이후의 시간만 설정할 수 있습니다.` };
+      }
     }
 
     if (timeUnit && timeUnit !== "분") {
