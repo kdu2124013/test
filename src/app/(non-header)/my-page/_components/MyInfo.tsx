@@ -108,8 +108,64 @@ const MyInfo = () => {
                     </p>
                   </li>
                 )}
-                <Link href="/my-page/account/nickname">
-                  <li className="desktop:h-[92px] relative min-w-[343px] h-16 flex items-center px-3 py-5 border-b-[1px]  border-gray-100 duration-200 text-gray-900 hover:cursor-pointer hover:bg-gray-100 active:bg-gray-200">
+                <li
+                  className={`desktop:min-h-[92px] relative min-w-[343px] h-16 flex items-center px-3 py-5 border-b-[1px] border-gray-100 text-gray-900 `}
+                >
+                  <div className="desktop:hidden block">
+                    <NicknameSmall />
+                  </div>
+                  <div className="desktop:block hidden">
+                    <Nickname />
+                  </div>
+                  <p className="desktop:text-[22px] desktop:ml-2 desktop:mb-0.5 flex items-center h-[28px] ml-1 text-gray-800 font-medium text-base">
+                    닉네임 변경
+                  </p>
+                  <div className="absolute right-2">
+                    <NextBtn />
+                  </div>
+                </li>
+                {!data?.isOAuth && (
+                  <li
+                    className={`desktop:min-h-[92px] relative min-w-[343px] h-16 flex items-center px-3 py-5 border-b-[1px] border-gray-100 text-gray-900 `}
+                  >
+                    <div className="desktop:hidden block">
+                      <PasswordSmall />
+                    </div>
+                    <div className="desktop:block hidden">
+                      <Password />
+                    </div>
+                    <p className="desktop:text-[22px] desktop:ml-2 desktop:mb-0.5 flex items-center h-[28px] ml-1 text-gray-800 font-medium text-base">
+                      비밀번호 변경
+                    </p>
+                    <div className="absolute right-2">
+                      <NextBtn />
+                    </div>
+                  </li>
+                )}
+                <li
+                  className={`desktop:min-h-[92px] relative min-w-[343px] h-16 flex items-center px-3 py-5 border-b-[1px] border-gray-100 text-gray-900 `}
+                >
+                  <div className="desktop:hidden block">
+                    <PasswordSmall />
+                  </div>
+                  <div className="desktop:block hidden">
+                    <Password />
+                  </div>
+                  <p className="desktop:text-[22px] desktop:ml-2 desktop:mb-0.5 flex items-center h-[28px] ml-1 text-gray-800 font-medium text-base">
+                    로그아웃
+                  </p>
+                  <div className="absolute right-2">
+                    <NextBtn />
+                  </div>
+                </li>
+              </ul>
+
+              <h1 className="desktop:text-[26px] desktop:my-3 desktop:leading-7 min-w-[343px] h-7 flex items-center pl-3 text-gray-900 font-extrabold text-base mt-8">
+                프로필
+              </h1>
+              <ul>
+                <Link href="/my-page/profile/image">
+                  <li className="desktop:min-h-[92px] relative min-w-[343px] h-16 flex items-center px-3 py-5 border-b-[1px] border-gray-100 text-gray-900 hover:cursor-pointer hover:bg-gray-100 active:bg-gray-200">
                     <div className="desktop:hidden block">
                       <NicknameSmall />
                     </div>
@@ -117,7 +173,7 @@ const MyInfo = () => {
                       <Nickname />
                     </div>
                     <p className="desktop:text-[22px] desktop:ml-2 desktop:mb-0.5 flex items-center h-[28px] ml-1 text-gray-800 font-medium text-base">
-                      닉네임 변경
+                      프로필 이미지
                     </p>
                     <div className="desktop:right-3 absolute right-2 text-gray-300">
                       <div className="desktop:hidden block">
@@ -129,46 +185,38 @@ const MyInfo = () => {
                     </div>
                   </li>
                 </Link>
-                {!data?.isOAuth && (
-                  <Link href="/my-page/account/password">
-                    <li className="desktop:h-[92px] relative min-w-[343px] h-16 flex items-center px-3 py-5 border-b-[1px]  border-gray-100 duration-200 text-gray-900 hover:cursor-pointer hover:bg-gray-100 active:bg-gray-200">
-                      <div className="desktop:hidden block">
-                        <PasswordSmall />
-                      </div>
-                      <div className="desktop:block hidden">
-                        <Password />
-                      </div>
-                      <p className="desktop:text-[22px] desktop:ml-2 desktop:mb-0.5 flex items-center h-[28px] ml-1 text-gray-800 font-medium text-base">
-                        비밀번호 변경
-                      </p>
-                      <div className="desktop:right-3 absolute right-2 text-gray-300">
-                        <div className="desktop:hidden block">
-                          <NextBtn />
-                        </div>
-                        <div className="desktop:block hidden">
-                          <NextLargeBtn />
-                        </div>
-                      </div>
-                    </li>
-                  </Link>
-                )}
-                <li
-                  onClick={handleLogoutBtn}
-                  className="desktop:h-[92px] desktop:mt-10 relative min-w-[343px] h-16 mt-5 flex items-center px-3 py-5 border-b-[1px]  border-gray-100 duration-200 text-gray-800 font-medium text-base hover:cursor-pointer hover:bg-gray-100 active:bg-gray-200"
-                >
-                  <p className="desktop:text-[22px] text-gray-800 font-medium text-base">로그아웃</p>
-                  <div className="desktop:right-3 absolute right-2 text-gray-300">
+                <Link href="/my-page/profile/bio">
+                  <li className="desktop:min-h-[92px] relative min-w-[343px] h-16 flex items-center px-3 py-5 border-b-[1px] border-gray-100 text-gray-900 hover:cursor-pointer hover:bg-gray-100 active:bg-gray-200">
                     <div className="desktop:hidden block">
-                      <NextBtn />
+                      <NicknameSmall />
                     </div>
                     <div className="desktop:block hidden">
-                      <NextLargeBtn />
+                      <Nickname />
                     </div>
-                  </div>
-                </li>
-                <Link href="/my-page/account/delete-account">
-                  <li className="desktop:h-[92px] relative min-w-[343px] h-16 flex items-center px-3 py-5 border-b-[1px]  border-gray-100 duration-200 text-gray-800 font-medium text-base hover:cursor-pointer hover:bg-gray-100 active:bg-gray-200">
-                    <p className="desktop:text-[22px] text-gray-800 font-medium text-base">회원탈퇴</p>
+                    <p className="desktop:text-[22px] desktop:ml-2 desktop:mb-0.5 flex items-center h-[28px] ml-1 text-gray-800 font-medium text-base">
+                      자기소개
+                    </p>
+                    <div className="desktop:right-3 absolute right-2 text-gray-300">
+                      <div className="desktop:hidden block">
+                        <NextBtn />
+                      </div>
+                      <div className="desktop:block hidden">
+                        <NextLargeBtn />
+                      </div>
+                    </div>
+                  </li>
+                </Link>
+                <Link href="/my-page/profile/personal-info">
+                  <li className="desktop:min-h-[92px] relative min-w-[343px] h-16 flex items-center px-3 py-5 border-b-[1px] border-gray-100 text-gray-900 hover:cursor-pointer hover:bg-gray-100 active:bg-gray-200">
+                    <div className="desktop:hidden block">
+                      <NicknameSmall />
+                    </div>
+                    <div className="desktop:block hidden">
+                      <Nickname />
+                    </div>
+                    <p className="desktop:text-[22px] desktop:ml-2 desktop:mb-0.5 flex items-center h-[28px] ml-1 text-gray-800 font-medium text-base">
+                      개인정보
+                    </p>
                     <div className="desktop:right-3 absolute right-2 text-gray-300">
                       <div className="desktop:hidden block">
                         <NextBtn />
