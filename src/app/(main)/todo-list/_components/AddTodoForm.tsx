@@ -4,9 +4,10 @@ import { toast } from "react-toastify";
 
 export interface AddTodoFormProps {
   onSubmit?: (data: TodoFormData) => void;
+  selectedDate?: Date;
 }
 
-const AddTodoForm = ({ onSubmit }: AddTodoFormProps) => {
+const AddTodoForm = ({ onSubmit, selectedDate }: AddTodoFormProps) => {
   const initialData: TodoFormData = {
     title: "",
     description: "",
@@ -22,6 +23,7 @@ const AddTodoForm = ({ onSubmit }: AddTodoFormProps) => {
         onSubmit?.(data);
       }}
       isReadonly={false}
+      selectedDate={selectedDate}
       footer={
         <Button type="submit" variant="PAI" size="default" className="w-full">
           완료

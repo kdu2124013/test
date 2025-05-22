@@ -143,29 +143,47 @@ export const parseKoreanTime = (
         .month(month - 1)
         .date(day)
         .startOf('day');
-      
-      // 오늘 날짜인 경우에만 현재 시간 이후의 시간만 설정 가능하도록
-      if (date.isSame(currentTime, 'day')) {
-        const currentHour = currentTime.hour();
-        if (hours <= currentHour) {
-          return { error: `오늘은 ${currentHour + 1}시 이후의 시간만 설정할 수 있습니다.` };
-        }
-      }
-      // 다른 날짜(내일 포함)는 시간 제약 없음
     } else {
-      // 날짜가 명시되지 않은 경우(오늘)는 현재 시간 이후만 설정 가능
+      // 날짜가 명시되지 않은 경우(오늘)
       date = currentTime.clone();
-      const currentHour = currentTime.hour();
-      if (hours <= currentHour) {
-        return { error: `${currentHour + 1}시 이후의 시간만 설정할 수 있습니다.` };
-      }
     }
 
     if (timeUnit && timeUnit !== "분") {
-      hours = adjustHours(hours, period, date);
+      // 오전/오후 변환
+      switch (period) {
+        case "오후":
+        case "저녁":
+        case "밤":
+          hours = hours < 12 ? hours + 12 : hours;
+          break;
+        case "오전":
+        case "아침":
+          hours = hours === 12 ? 0 : hours;
+          break;
+        case "새벽":
+          hours = hours === 12 ? 0 : hours > 6 ? hours + 12 : hours;
+          break;
+        case "점심":
+          hours = hours < 12 ? hours + 12 : hours;
+          break;
+        case "낮":
+          hours = hours >= 12 && hours < 18 ? hours : hours + 12;
+          break;
+        default:
+          if (hours === 12) hours = 12;
+          else if (hours >= 1 && hours <= 6) hours = hours + 12;
+          else if (hours > 6 && hours < 12) {
+            hours = hours + 12;
+          }
+      }
       date = date.hour(hours).minute(minutes);
     } else if (!timeUnit) {
       date = date.startOf("day");
+    }
+
+    // 오늘 날짜인 경우에만 현재 시간 이후인지 확인
+    if (date.isSame(currentTime, 'day') && date.isBefore(currentTime)) {
+      return { error: `${currentTime.hour() + 1}시 이후의 시간만 설정할 수 있습니다.` };
     }
 
     console.log(`Final parsed date: ${date.format("YYYY-MM-DD HH:mm:ssZ")}`);
@@ -180,6 +198,12 @@ export const parseKoreanTime = (
     const hours = parseInt(timeMatch[1]);
     const minutes = parseInt(timeMatch[2]);
     const date = currentTime.clone().hour(hours).minute(minutes);
+
+    // 오늘 날짜인 경우에만 현재 시간 이후인지 확인
+    if (date.isSame(currentTime, 'day') && date.isBefore(currentTime)) {
+      return { error: `${currentTime.hour() + 1}시 이후의 시간만 설정할 수 있습니다.` };
+    }
+
     console.log(`Parsed date: ${date.format("YYYY-MM-DD HH:mm:ssZ")}`);
     return { hours, minutes, date };
   }
@@ -217,6 +241,12 @@ export const parseKoreanTime = (
 };
 
 const adjustHours = (hours: number, period: string | undefined, currentTime: dayjs.Dayjs): number => {
+  // 오늘 날짜가 아닌 경우에는 단순히 오전/오후만 변환
+  if (!currentTime.isSame(dayjs(), 'day')) {
+    return period === "오후" && hours < 12 ? hours + 12 : hours;
+  }
+
+  // 오늘 날짜인 경우에만 시간 제약 적용
   switch (period) {
     case "오후":
     case "저녁":

@@ -80,7 +80,7 @@ const AddTodoDrawer = ({ onSubmit, selectedDate, isHome, isOpen, setIsOpen }: Ad
         selectedDate={selectedDate}
         modal={false}
       >
-        <AddTodoForm onSubmit={handleSubmit} />
+        <AddTodoForm onSubmit={handleSubmit} selectedDate={selectedDate} />
       </TodoDrawer>
     </>
   );

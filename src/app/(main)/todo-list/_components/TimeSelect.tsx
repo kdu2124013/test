@@ -16,6 +16,7 @@ export interface TimeSelectProps {
   disabled?: boolean;
   selectedDate?: Date;
 }
+
 const options = [
   { label: "오전 12:00", value: "0:0" },
   { label: "오전 12:30", value: "0:30" },
@@ -73,8 +74,10 @@ const TimeSelect = ({ value, onChange, disabled, selectedDate }: TimeSelectProps
   const isToday = selectedDateTime.isSame(now, 'day');
 
   const filteredOptions = options.filter(option => {
+    // 오늘이 아닌 경우 모든 옵션 허용
     if (!isToday) return true;
     
+    // 오늘인 경우 현재 시간 이후만 허용
     const [hours, minutes] = option.value.split(':').map(Number);
     const optionTime = selectedDateTime.hour(hours).minute(minutes);
     return optionTime.isAfter(now);
@@ -82,7 +85,7 @@ const TimeSelect = ({ value, onChange, disabled, selectedDate }: TimeSelectProps
 
   return (
     <Select
-      onValueChange={(val) => onChange?.(parseTimeString(val))}
+      onValueChange={(val: string) => onChange?.(parseTimeString(val))}
       disabled={disabled}
       defaultValue={value ? `${value[0]}:${value[1]}` : undefined}
     >
@@ -116,4 +119,5 @@ function parseTimeString(timeString: string) {
   }
   return undefined;
 }
+
 export default TimeSelect;
